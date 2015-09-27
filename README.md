@@ -21,17 +21,16 @@ Acme is interested in understanding the:
 
 > **Data Pipeline Workflow**
 
-![Image](img/SparklineApp-UserTrends.png?raw=true)
-![Image](http://sparkline-beta.s3-website-us-east-1.amazonaws.com/images/step-o-data-pipeline-design.png)
+![Image](http://s3.amazonaws.com/cubefyre-beta/images/step-o-data-pipeline-design.png)
 
 > **Data Lake on S3 - Folders With Event Logs**
 
-![Image](http://sparkline-beta.s3-website-us-east-1.amazonaws.com/images/s3-daily-buckets-ss.png)
+![Image](http://s3.amazonaws.com/cubefyre-beta/images/s3-daily-buckets-ss.png)
 
 > **Raw Event Data In Compressed JSON**
 
 Event log is stored every hour on S3 in a daily bucket.
-![Image](http://sparkline-beta.s3-website-us-east-1.amazonaws.com/images/raw-data-ss.png)
+![Image](http://s3.amazonaws.com/cubefyre-beta/images/raw-data-ss.png)
 
 > **Review Event Sample Data and Schema**
 
@@ -121,7 +120,7 @@ Here is a sample list of UDFs which come handy while building data-pipeline:
 - Column functions such as drop, rename, remove nulls and conditional statements based
 - Row functions such as filter, drop duplicate rows
 
-![image](http://sparkline-beta.s3-website-us-east-1.amazonaws.com/images/step-i-etl.png)
+![image](http://s3.amazonaws.com/cubefyre-beta/images/step-i-etl.png)
 
 > **Event Metrics Cube Schema**
 
@@ -232,7 +231,7 @@ Here is a sample of session metrics which get computed every day and get added t
 - is_bounce_session
 - avg_time_per_event
 
-![image] (http://sparkline-beta.s3-website-us-east-1.amazonaws.com/images/step-ii-etl.png)
+![image] (http://s3.amazonaws.com/cubefyre-beta/images/step-ii-etl.png)
 
 > **Session Metrics Cube Schema**
 
@@ -289,7 +288,7 @@ Stage II ETL - determine if new user
 - first_seen_at
 - is_new_user
 
-![image](http://sparkline-beta.s3-website-us-east-1.amazonaws.com/images/step-iii-etl.png)
+![image](http://s3.amazonaws.com/cubefyre-beta/images/step-iii-etl.png)
 
 **User Metrics Cube Schema**
 
@@ -356,7 +355,7 @@ Conversion cube schema
 |– sd_day: integer (nullable = true) 
 |– sd_week: integer (nullable = true)
 ```
-![image](http://sparkline-beta.s3-website-us-east-1.amazonaws.com/images/step-iv-etl.png)
+![image](http://s3.amazonaws.com/cubefyre-beta/images/step-iv-etl.png)
 
 > **Impact Analysis and Attribution Computations**
 
@@ -371,7 +370,7 @@ Following metrics are computed which help marketers in ranking impact events and
 - revenue_attributed_to_impact_event
 - impact_event_group_rank (used for last-touch attribution)
 
-![image](http://sparkline-beta.s3-website-us-east-1.amazonaws.com/images/step-v-etl.png)
+![image](http://s3.amazonaws.com/cubefyre-beta/images/step-v-etl.png)
 
 > **Mission Accomplished**
 
