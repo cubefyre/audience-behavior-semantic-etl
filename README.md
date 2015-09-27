@@ -47,7 +47,7 @@ VhBYQcAjH5,[null,null,null,null,null,null,null,null,List([449.0,Charge,1], [0.0,
 2015-09-01T00:00:35.662Z,2015-09-01T00:00:33.017Z,track,null,2]
 ```
 
-> **Event Log Schema (Pt-I)**
+> **Event Log Schema**
 
 ```
 |– anonymousId: string (nullable = true) 
@@ -123,6 +123,170 @@ Here is a sample list of UDFs which come handy while building data-pipeline:
 
 ![image](http://sparkline-beta.s3-website-us-east-1.amazonaws.com/images/step-i-etl.png)
 
+> **Event Metrics Cube Schema**
 
+```
+|– page_name: string (nullable = true) 
+|– sd_product_quantity: string (nullable = true) 
+|– event_path: string (nullable = true) 
+|– campaign_content: string (nullable = true) 
+|– event_param: string (nullable = true) 
+|– channel: string (nullable = true) 
+|– user_agent: string (nullable = true) 
+|– utc_time: string (nullable = true) 
+|– campaign_source: string (nullable = true) 
+|– event_name: string (nullable = true) 
+|– project_id: string (nullable = true) 
+|– order_revenue: string (nullable = true) 
+|– ordertax: string (nullable = true) 
+|– currency: string (nullable = true) 
+|– campaign_name: string (nullable = true) 
+|– order_id: string (nullable = true) 
+|– campaign_term: string (nullable = true) 
+|– page_referrer: string (nullable = true) 
+|– event_referrer: string (nullable = true) 
+|– order_discount: string (nullable = true) 
+|– campaign_medium: string (nullable = true) 
+|– sd_product_price: string (nullable = true) 
+|– sd_product_name: string (nullable = true) 
+|– event_id: string (nullable = true) 
+|– page_params: string (nullable = true) 
+|– event_url: string (nullable = true)
+|– event_title: string (nullable = true) 
+|– page_url: string (nullable = true) 
+|– received_at: string (nullable = true) 
+|– ip_address: string (nullable = true) 
+|– page_path: string (nullable = true) 
+|– segment_sent_at: string (nullable = true) 
+|– product: string (nullable = true) 
+|– order_coupon_code: string (nullable = true) 
+|– segment_user_id: string (nullable = true) 
+|– type: string (nullable = true) 
+|– user_id: string (nullable = true) 
+|– sd_day_name: integer (nullable = true) 
+|– sd_hour_of_day: integer (nullable = true) 
+|– sd_country_code: string (nullable = true) 
+|– sd_device_family: string (nullable = true) 
+|– sd_continent: string (nullable = true) 
+|– sd_longitude: double (nullable = true) 
+|– sd_city: string (nullable = true) 
+|– sd_browser_version_patch: string (nullable = true) 
+|– sd_device_os: string (nullable = true) 
+|– sd_region: string (nullable = true) 
+|– sd_latitude: double (nullable = true) 
+|– sd_device_os_version_patch: string (nullable = true) 
+|– sd_device_os_version_major: string (nullable = true) 
+|– sd_country_name: string (nullable = true) 
+|– sd_postal_code: string (nullable = true)
+|– sd_browser_version_major: string (nullable = true) 
+|– sd_device_os_patch_minor: string (nullable = true) 
+|– sd_browser: string (nullable = true) 
+|– sd_browser_version_minor: string (nullable = true) 
+|– sd_device_version_minor: string (nullable = true) 
+|– sd_host: string (nullable = true) 
+|– sd_path: string (nullable = true) 
+|– sd_query: string (nullable = true) 
+|– sd_campaign: string (nullable = true) 
+|– sd_source_o: string (nullable = true) 
+|– sd_medium_o: string (nullable = true) 
+|– sd_content: string (nullable = true) 
+|– sd_term: string (nullable = true) 
+|– sd_product_category: string (nullable = true) 
+|– sd_is_revenue_event: integer (nullable = true) 
+|– sd_is_cart_event: integer (nullable = true) 
+|– sd_is_video_event: integer (nullable = true) 
+|– sd_product_revenue: double (nullable = true) 
+|– sd_source: string (nullable = true) 
+|– sd_medium: string (nullable = true) 
+|– sd_previous_event_timestamp: string (nullable = true) 
+|– sd_year: integer (nullable = true) 
+|– sd_month: integer (nullable = true) 
+|– sd_day: integer (nullable = true) 
+|– sd_week: integer (nullable = true) 
+|– sd_hour: integer (nullable = true)
+```
+
+> **Step II - Sessionize Data**
+
+**Compute Session Metrics**
+In this stage of the data pipeline, the event metrics cube is transformed and a session metrics cube is built. Session metrics such as landing screen, exit screen, session rank, start time and end time etc are computed and stored in session metrics cube.
+
+Here is a sample of session metrics which get computed every day and get added to session metrics cube:
+- session_rank
+- session_start_time
+- session_end_time
+- session_duration
+- session_landing_screen
+- session_exit_screen
+- session_event_count
+- session_event_path
+- session_page_path
+- session_page_name
+- session_page_referrer
+- session_product_list
+- session_product_quantity
+- session_revenue
+- is_revenue_session
+- is_cart_session
+- is_video_session
+- is_bounce_session
+- avg_time_per_event
+
+![image] (http://sparkline-beta.s3-website-us-east-1.amazonaws.com/images/step-ii-etl.png)
+
+> **Session Metrics Cube Schema**
+
+New columns added to event metrics cube and the grain of the cube is at session level.
+```
+|– sd_previous_event_timestamp: string (nullable = true) 
+|– sd_session_id: string (nullable = true) 
+|– sd_session_rank: integer (nullable = true) 
+|– sd_session_start_time: long (nullable = true) 
+|– sd_session_end_time: long (nullable = true) 
+|– sd_session_event_count: long (nullable = true) 
+|– sd_session_landing_screen: string (nullable = true) 
+|– sd_session_exit_screen: string (nullable = true) 
+|– sd_session_page_referrer: string (nullable = true) 
+|– sd_session_product_list: array (nullable = true) 
+|– sd_session_product_quantity: double (nullable = true) 
+|– sd_session_revenue: double (nullable = true) 
+|– sd_is_revenue_session: integer (nullable = true) 
+|– sd_is_cart_session: integer (nullable = true) 
+|– sd_is_video_session: integer (nullable = true) 
+|– sd_session_duration: double (nullable = true) 
+|– sd_is_bounce_session: integer (nullable = true) 
+|– sd_avg_time_per_event: double (nullable = true)
+```
+
+> **Step III - Aggregate Data at User Level**
+
+**Compute User Metrics Cube and Rank Users**
+
+In this stage of the data pipeline, the session metrics cube is transformed and a user metrics cube is built. User metrics such as daily revenue, number of sessions, number of revenue sessions, first seen at, rank by different dimensions are computed and stored in user metrics cube.
+
+Here is a sample of user metrics which get computed every day and get added to user metrics cube: 
+
+Metrics columns
+- daily_revenue
+- daily_product_quantity
+- session_count
+- daily_time_spent
+- avg_session_time
+- event_count
+- avg_num_events_per_session
+- last_session_end_time
+- earliest_session_start_time
+- num_revenue_session
+- num_video_session
+- num_cart_session
+
+Ranking columns
+- rank_by_event_count
+- rank_by_session_count
+- rank_by_time_spent
+
+Stage II ETL - determine if new user
+- first_seen_at
+- is_new_user
 
 
