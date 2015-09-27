@@ -289,4 +289,97 @@ Stage II ETL - determine if new user
 - first_seen_at
 - is_new_user
 
+![image](http://sparkline-beta.s3-website-us-east-1.amazonaws.com/images/step-iii-etl.png)
 
+**User Metrics Cube Schema**
+
+New columns added to user metrics cube and the grain of the cube is at user level.
+```
+|– sd_daily_revenue: double (nullable = true) 
+|– sd_daily_product_quantity: double (nullable = true) 
+|– sd_session_count: long (nullable = true) 
+|– sd_time_spent: double (nullable = true) 
+|– sd_avg_session_time: double (nullable = true) 
+|– sd_event_count: long (nullable = true) 
+|– sd_avg_num_events_per_session: double (nullable = true) 
+|– sd_last_session_end_time: long (nullable = true) 
+|– sd_earliest_session_start_time: long (nullable = true) 
+|– sd_num_revenue_session: long (nullable = true) 
+|– sd_num_cart_session: long (nullable = true) 
+|– sd_num_video_session: long (nullable = true) 
+|– sd_rank_by_event_count: integer (nullable = true) 
+|– sd_rank_by_session_count: integer (nullable = true) 
+|– sd_rank_by_time_spent: integer (nullable = true) 
+|– sd_first_seen_at: long (nullable = true) 
+|– sd_is_new_user: integer (nullable = false) 
+|– sd_is_revenue_user: integer (nullable = false)
+```
+
+> **Step IV - Conversion Rate & Cohort Analysis Computations**
+
+**Tag Users and Extract Key Dimensions to Build Conversion Cube**
+
+In this stage of the data pipeline, the user metrics cube is transformed and a conversion rate cube is built. User metrics such as is_revenue_user and all_users are computed and stored along with other key dimension for conversion analysis.
+
+Conversion cube schema
+```
+|– campaign_name: string (nullable = true) 
+|– campaign_content: string (nullable = true) 
+|– campaign_medium: string (nullable = true) 
+|– campaign_source: string (nullable = true) 
+|– campaign_term: string (nullable = true) 
+|– sd_host: string (nullable = true) 
+|– sd_path: string (nullable = true) 
+|– sd_campaign: string (nullable = true) 
+|– sd_source: string (nullable = true) 
+|– sd_medium: string (nullable = true) 
+|– sd_content: string (nullable = true) 
+|– sd_term: string (nullable = true) 
+|– utc_time: string (nullable = true) 
+|– channel: string (nullable = true) 
+|– ip_address: string (nullable = true) 
+|– sd_browser: string (nullable = true) 
+|– sd_device_os: string (nullable = true) 
+|– sd_device_family: string (nullable = true) 
+|– sd_country_code: string (nullable = true) 
+|– sd_country_name: string (nullable = true) 
+|– sd_region: string (nullable = true) 
+|– sd_city: string (nullable = true) 
+|– sd_latitude: double (nullable = true) 
+|– sd_longitude: double (nullable = true) 
+|– sd_postal_code: string (nullable = true) 
+|– sd_continent: string (nullable = true) 
+|– sd_rev_user: long (nullable = true) 
+|– sd_all_user: long (nullable = true) 
+|– sd_year: integer (nullable = true) 
+|– sd_month: integer (nullable = true) 
+|– sd_day: integer (nullable = true) 
+|– sd_week: integer (nullable = true)
+```
+![image](http://sparkline-beta.s3-website-us-east-1.amazonaws.com/images/step-iv-etl.png)
+
+> **Impact Analysis and Attribution Computations**
+
+**Associate Impact Events and Pages to Goals and Compute Metrics**
+In this complex stage of the data pipeline, the session cube is used to extract daily goal events and impact events over a look-back period. Look-back period is defined as a period over which users have been exposed to various impact events and pages to influence their behavior and drive more conversion. Impact events are then associated with goal events to rank impact events, pages and drive attribution analysis.
+
+Following metrics are computed which help marketers in ranking impact events and their effectiveness using the influence on users, revenues etc.
+
+- days_to_goal
+- sessions_to_goal
+- time_spent_on_site_to_goal
+- revenue_attributed_to_impact_event
+- impact_event_group_rank (used for last-touch attribution)
+
+![image](http://sparkline-beta.s3-website-us-east-1.amazonaws.com/images/step-v-etl.png)
+
+> **Mission Accomplished**
+
+Using Sparkline's SemanticETL, AcmeBeauty transformed the raw events log to a set of rich cubes for query and analytics in just 5 steps and 2-stage ETL. These cubes are:
+- Event Metrics
+- Session Metrics
+- User Metrics
+- Conversion Rate and Cohort Analysis
+- Goals-Impact Analysis and Attribution
+
+In summary, raw event logs of any structure / schema can be very quickly transformed to rich cubes using business metrics which matter to business users and decision makers. No SQL is required to create an autonomous data-pipeline.
